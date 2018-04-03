@@ -9,7 +9,7 @@ note: 初步测试，可用
 
 # 从配置文件取数据
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read('config-uncommit.ini')
 # svn_addr = config.get('svn','svn_addr')
 # user_name = config.get('svn','user_name')
 # version_num = config.get('svn','version_num')
@@ -26,7 +26,9 @@ def get_orig_svn_info():
     # svn_command_format = svn_log_command.format(
     #     record_limit,  user_name, svn_addr)
 
-    svn_command_format = 'svn log -r {2018-02-10}:{2017-12-29} --search 1647 --search-and duanyaochang ' \
+    # svn_command_format = 'svn log -r {2019-02-10}:{2017-12-29} --search 1804 --search-and duanyaochang ' \
+    #                      '-v http://192.168.200.233:8888/svn/CN/Develop/projects/branches/DEV/cnweb_sc'
+    svn_command_format = 'svn log -r {2019-02-10}:{2018-01-23} --search 1907 ' \
                          '-v http://192.168.200.233:8888/svn/CN/Develop/projects/branches/DEV/cnweb_sc'
 
     print('svn_command_format:', svn_command_format)
@@ -47,6 +49,7 @@ def get_svn_rec_oper(svninfo):
     version_num_list = [] # 存放提交的所有版本号
     j = 0
     while j < len(svninfo) - 1:  # 最后一行--------没有价值，反而会让下面的if越界
+        print('line info:', svninfo[j])
         if svninfo[j].startswith('----'):  # 一次提交记录的第一行
             j = j + 1  # 下一行，提取版本号、提交人信息
             # print('line info:',svninfo[j])
