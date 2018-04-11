@@ -215,7 +215,6 @@ def deploy_all_files():
     exclude_file_list = ['applicationContext.xml','applicationContext-shiro.xml','disconf.properties'
                          ,'dubbo.properties','ehcache.xml','jdbc.properties','log4j.properties','mail.properties'
                          ,'mybatis-config.xml','redis.properties','spring-mvc.xml']
-    # exclude_file_list = ['applicationContext.xml']
     all_deploy_file_list.extend(get_files_from_dir(class_file_dir))
     final_file_list = []
     final_file_list.extend(all_deploy_file_list)

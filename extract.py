@@ -28,7 +28,7 @@ def get_orig_svn_info():
 
     # svn_command_format = 'svn log -r {2019-02-10}:{2017-12-29} --search 1804 --search-and duanyaochang ' \
     #                      '-v http://192.168.200.233:8888/svn/CN/Develop/projects/branches/DEV/cnweb_sc'
-    svn_command_format = 'svn log -r {2019-02-10}:{2018-01-23} --search 1907 ' \
+    svn_command_format = 'svn log -r {2019-02-10}:{2018-01-23} --search 1956 ' \
                          '-v http://192.168.200.233:8888/svn/CN/Develop/projects/branches/DEV/cnweb_sc'
 
     print('svn_command_format:', svn_command_format)
