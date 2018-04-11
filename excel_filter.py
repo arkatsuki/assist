@@ -1,6 +1,7 @@
 
 import excel_operation
 import re
+import assist_util
 
 
 def filter_rule2(data_dict):
@@ -41,13 +42,8 @@ def filter_rule3(data_dict):
         rs_dict[sheet_name] = []
         rs_dict[sheet_name].append(sheet_data[0])
         for row_list in sheet_data:
-            for cell_data in row_list:
-                # print('cell_data1:',cell_data)
-                if type(cell_data) == str and cell_data.strip().find('深圳') >= 0:
-                    print('cell_data:',cell_data)
-                    rs_dict[sheet_name].append(row_list)
-                    break
-                pass
+            rs_dict[sheet_name].append(row_list)
+
             pass
         pass
     return rs_dict
@@ -83,6 +79,7 @@ def filter_rule5(data_dict):
     :return:
     """
     rs_dict = {}  # 用于返回
+
     for sheet_name, sheet_data in data_dict.items():
         rs_dict[sheet_name] = []
         rs_dict[sheet_name].append(sheet_data[0])
