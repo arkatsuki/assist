@@ -23,7 +23,7 @@ def bubble_sort(self, unsorted_list):
 
 def binary_search(find, list1) :
     '''
-    二分查找
+    二分查找，未充分测试
     :param find:
     :param list1:
     :return:
@@ -46,7 +46,8 @@ def binary_search(find, list1) :
 
 def binary_search_asc(new_num, num_list) :
     '''
-    self 二分插入排序
+    初步测试通过，未覆盖所有情况
+    二分插入有序列表，升序排列
     :param new_num:
     :param num_list:
     :return:
@@ -93,7 +94,8 @@ def binary_search_asc(new_num, num_list) :
 
 def binary_search_desc(new_num, num_list) :
     '''
-    self 二分插入排序
+    初步测试通过，未覆盖所有情况
+    二分插入有序列表，降序排列
     :param new_num:
     :param num_list:
     :return:
@@ -146,6 +148,76 @@ def binary_search_desc(new_num, num_list) :
         if high<low:
             num_list.insert(low, new_num)
             print('< num_list:',  num_list)
+            break
+            pass
+    return num_list
+
+
+def binary_insert_list_desc(new_elem, num_list, index):
+    '''
+    二分插入有序列表，降序排列
+    :param new_elem: 待插入的新元素
+    :param num_list: 降序排列的数量
+    :param index: 用元素的第几个子元素进行大小比较
+    :return:
+    '''
+    data = new_elem[index]
+    if not isinstance(data, float):
+        try:
+            data = float(data)
+            pass
+        except Exception:
+            # print('data:',data)
+            return
+        pass
+    low = 0
+    high = len(num_list)
+    if high==0:
+        num_list.append(new_elem)
+        return
+        pass
+    while low <= high :
+        mid = (low + high)//2
+        # print('lhm', low, high, mid)
+        num_list_val = float(num_list[mid][index])
+        if num_list_val == data:
+            num_list.insert(mid, new_elem)
+            break
+        # 左半边
+        elif num_list_val < data:
+            high = mid - 1
+            if low == high:
+                num_list_low_val = float(num_list[low][index])
+                if num_list_low_val == data:
+                    num_list.insert(low, new_elem)
+                elif num_list_low_val > data:
+                    num_list.insert(low + 1, new_elem)
+                else:
+                    num_list.insert(low, new_elem)
+                    pass
+                break
+                pass
+        #右半边
+        else :
+            low = mid + 1
+            if low == high:
+                if low>=len(num_list):
+                    num_list.insert(low-1, new_elem)
+                    pass
+                num_list_low_val_r = float(num_list[low][index])
+                if num_list_low_val_r == data:
+                    num_list.insert(low, new_elem)
+                elif num_list_low_val_r > data:
+                    num_list.insert(low + 1, new_elem)
+                else:
+                    num_list.insert(low, new_elem)
+                    pass
+                break
+                pass
+            pass
+
+        if high<low:
+            num_list.insert(low, new_elem)
             break
             pass
     return num_list
