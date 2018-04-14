@@ -88,7 +88,9 @@ def filter_rule5(data_dict):
         title_column2 = sheet_data[3]
         for row_list in sheet_data:
             # 职位列，过滤掉执法岗位
-            if row_list[2].find('执法')!=-1:
+            # if row_list[2].find('执法')!=-1:
+            if re.search('执法|警员', row_list[2]):
+            # if re.match('执法', row_list[2]):
                 continue
                 pass
             assist_util.binary_insert_list_desc(row_list, rs_dict[sheet_name], 8)
