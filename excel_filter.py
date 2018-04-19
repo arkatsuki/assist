@@ -63,7 +63,7 @@ def filter_rule4(data_dict):
         for row_list in sheet_data:
             print('row_list[10]:',row_list[10])
             # 正则表达式，包含A或者B
-            if type(row_list[10]) == str and re.match('A|B', row_list[10]):
+            if type(row_list[10]) == str and re.search('A|B', row_list[10]):
                 print('find A')
                 rs_dict[sheet_name].append(row_list)
                 pass

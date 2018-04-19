@@ -207,6 +207,14 @@ def deploy_all_files():
     全量部署，除了部分配置文件
     :return:
     '''
+    # 编译
+    compile_rs = os.popen(r'compile.bat')
+    print('compile result:', compile_rs.read())
+    continue_flag = input('press any key to continue')
+    if 'n'==continue_flag:
+        print('return !!!')
+        return
+    print('continue !!!')
     config = configparser.ConfigParser()
     config.read('config-uncommit.ini')
     class_file_dir = config.get('sendToServer','class_file_dir')
@@ -243,7 +251,8 @@ if __name__ == "__main__":
     # username = config.get('sendToServer', 'local_username'); password = config.get('sendToServer', 'local_pw');
     host = '192.168.200.238'; port = 22; username = 'dev-sc'; password = 'hgHHJ?@!#'
     # restart_server(host, port, username, password)
-    # compile_proj()
     deploy_all_files()
+    # b = os.popen(r'D:/compile.bat')
+
     pass
 
