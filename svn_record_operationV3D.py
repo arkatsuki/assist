@@ -19,17 +19,19 @@ class SvnRecordOperation(object):
         self.records_modify = []
 
         self.record_all = {}  # 存放所有的记录，key是file_path, value是SvnRecord
-        self.version_num_list = []  # 保存所有版本号，升序排列。
+        self._version_num_list = []  # 保存所有版本号，升序排列。# 这儿要不要下划线都行。
 
     @property
     def version_num_list(self):
         # 进行升序排序
-        return bubble_sort_asc(self.version_num_list)
+        # 属性名前面必须有一个下划线，否则会报无限递归错误
+        return bubble_sort_asc(self._version_num_list)
 
-    # 不定义的话就没法设置version_num_list的值。
+    # 不定义的话就没法设置version_num_list的值，及时__init__里面的self.也没法设置。
     @version_num_list.setter
     def version_num_list(self, value):
-        self.version_num_list = value
+        # 属性名前面必须有一个下划线，否则会报无限递归错误
+        self._version_num_list = value
 
     def add_record(self, file_path, version_num, user_name, action):
         """
@@ -187,6 +189,8 @@ def bubble_sort_asc(te_li):
     :param te_li: 数字list
     :return:
     """
+    if len(te_li) <= 1:
+        return  te_li
     for i in range(0, len(te_li) - 1):
         for j in range(0, len(te_li) - 1 - i):
             if te_li[j] > te_li[j + 1]:
@@ -196,8 +200,7 @@ def bubble_sort_asc(te_li):
                 pass
             pass
         pass
-    print(te_li)
-    pass
+    return te_li
 
 
 def te_bubble_sort():

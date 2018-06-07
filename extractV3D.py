@@ -1,7 +1,7 @@
 
 import os
 import configparser
-from svn_record_operation import SvnRecordOperation
+from svn_record_operationV3D import SvnRecordOperation
 
 '''
 note: 初步测试，可用
@@ -93,4 +93,5 @@ if __name__ == "__main__":
     record_oper = get_svn_rec_oper(svninfo)
     excel_path = r'D:\svn info2.xls'
     record_oper.write_excel(excel_path)
+    print('version_num_list record_oper:', ','.join(record_oper.version_num_list))
     pass

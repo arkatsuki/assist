@@ -74,7 +74,7 @@ def restart_server_ssh(ssh):
 
 def backup_remote_dir(remote_dir_path, ssh):
     """
-    备份文件夹。会删除上一次的备份。
+    备份目录。会删除上一次的备份。
     :param remote_dir_path:
     :param ssh:
     :return:
@@ -102,9 +102,10 @@ def backup_remote_dir(remote_dir_path, ssh):
 
 def send_dir_to_remote(local_dir_path, remote_dir_path, sftp, ssh, exclude_file_list=[]):
     """
+    另外一种方法：用库压缩成zip，然后单个文件发送linux，在linux解压zip。
     本地文件夹发送到远程目录。
     sftp只支持文件put，所以需要遍历目录。
-    如果远程文件夹不存在会先新建
+    如果远程文件夹不存在会先新建。
     :param local_dir_path:  本地目录路径
     :param remote_dir_path: 远程目录路径
     :param sftp: sftp客户端
@@ -127,9 +128,9 @@ def send_dir_to_remote(local_dir_path, remote_dir_path, sftp, ssh, exclude_file_
         remote_file_path = file.replace(local_dir_path, remote_dir_path)
         dir_path = remote_file_path.replace(os.path.basename(remote_file_path), '')
         stdin, stdout, stderr = ssh.exec_command('mkdir -p ' + dir_path)
-        print('dir_path:', dir_path)
-        print('mkdir stdout result:', bytes.decode(stdout.read()))
-        print('mkdir stderr result:', bytes.decode(stderr.read()))
+        # print('dir_path:', dir_path)
+        # print('mkdir stdout result:', bytes.decode(stdout.read()))
+        # print('mkdir stderr result:', bytes.decode(stderr.read()))
         sftp.put(localpath=file, remotepath=remote_file_path)
         pass
     pass
@@ -159,7 +160,8 @@ def deploy_all_files():
     host = '192.168.200.238'; port = 22; username = 'dev-sc'; password = 'hgHHJ?@!#'
     ssh.connect(hostname=host, port=port, username=username, password=password)
     # 备份服务器的文件
-    backup_remote_dir(remote_class_dir, ssh)
+    # backup_remote_dir(remote_class_dir, ssh)
+    backup_remote_dir(remote_class_dir.replace(os.path.basename(remote_class_dir), ''), ssh)
     # 本地文件夹copy到远程，覆盖操作
     # 不更新的文件
     exclude_file_list = ['applicationContext.xml', 'applicationContext-shiro.xml', 'disconf.properties'

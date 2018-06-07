@@ -22,7 +22,6 @@ def get_files_from_dir(dir_path):
             pass
         pass
     return file_list
-    pass
 
 
 def send_file_sftp_pair(host, port, username, password, path_pair):
