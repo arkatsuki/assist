@@ -4,6 +4,14 @@ import os
 import configparser
 
 
+"""
+ok 
+需要实现的功能：
+编译；服务器进行备份；文件夹发送到服务器；重启tomcat；
+之前还需要：合并代码；抽取svn记录；抽取需要增量部署的文件；
+"""
+
+
 def get_files_from_dir(dir_path):
     """
     目录转换成文件名list, 文件名是完整路径
@@ -22,38 +30,15 @@ def get_files_from_dir(dir_path):
             pass
         pass
     return file_list
-    pass
-
-
-
-def send_file_sftp_single(host, port, username, password, local_path, remote_path):
-    """
-    :param local_path:
-    :param remote_path:
-    :return:
-    """
-    try:
-        # trans = paramiko.Transport((host, port))
-        trans = paramiko.Transport(host, port)
-        trans.connect(username=username, password=password)
-        # sftp = paramiko.SFTPClient.from_transport(trans)
-        sftp = paramiko.sftp_client.SFTPClient.from_transport(trans)
-
-        # 无论上传还是下载，两个路径都必须到文件名，不能到目录
-        sftp.put(localpath=local_path, remotepath=remote_path)
-        # sftp.get(remote_path, local_path)
-        trans.close()
-    except Exception as e:
-        print(e)
-        raise
-
-    pass
 
 
 def send_file_sftp_pair(host, port, username, password, path_pair):
     """
-    :param local_path:
-    :param remote_path:
+    :param host:
+    :param port:
+    :param username:
+    :param password:
+    :param path_pair: 是一个list，每个元素也是一个list：本地路径和远程的路径。
     :return:
     """
     try:
@@ -72,47 +57,10 @@ def send_file_sftp_pair(host, port, username, password, path_pair):
     except Exception as e:
         print(e)
         raise
-
     pass
 
 
-def send_dir_sftp(sftp, local_dir_path, remote_dir_path):
-    """
-    :param local_path:
-    :param remote_path:
-    :return:
-    """
-    if os.path.isfile(local_dir_path):
-
-        pass
-
-    pass
-
-def send_file_sftp(sftp, local_file_path, remote_file_path):
-    """
-    :param local_path:
-    :param remote_path:
-    :return:
-    """
-    # sftp.put(localpath=single_pair[0], remotepath=single_pair[1])
-
-    pass
-
-
-def exec_command_sftp():
-    '''
-    sftp连接并执行命令
-    :return:
-    '''
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname=host, port=22, username=username, password=password)
-    stdin, stdout, stderr = ssh.exec_command('cd /app/apache-tomcat-7-sc')
-    ssh.close()
-    pass
-
-
-def exec_command_ssh(ssh):
+def exec_command_ssh():
     '''
     ssh连接并执行命令
     :param ssh:
@@ -156,9 +104,6 @@ def get_class_paths(java_path, local_class_dir, remote_class_dir):
     pass
 
 
-def backup_remote():
-    pass
-
 
 def restart_server(host, port, username, password):
     """
@@ -168,8 +113,12 @@ def restart_server(host, port, username, password):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     ssh.connect(hostname=host, port=port, username=username, password=password)
-    # ssh.connect(hostname='192.168.48.128', port=22, username='root', password='centos2018')
-    # stdin, stdout, stderr = ssh.exec_command('cd /app/apache-tomcat-7-sc/bin')
+    restart_server_ssh(ssh)
+    ssh.close()
+    pass
+
+
+def restart_server_ssh(ssh):
     stdin, stdout, stderr = ssh.exec_command("ps -ef|grep apache-tomcat-7-sc|awk '!/00:00:0./ {print $2}'")
     out = bytes.decode(stdout.read())
     out_li = out.split('\n')
@@ -185,7 +134,8 @@ def restart_server(host, port, username, password):
     stdin, stdout, stderr = ssh.exec_command('source /etc/profile;/app/apache-tomcat-7-sc/bin/startup.sh')
     print('stdout result:', bytes.decode(stdout.read()))
     print('stderr result:', bytes.decode(stderr.read()))
-    ssh.close()
+    # 先不关闭，由建立ssh的那个调用方负责关闭
+    # ssh.close()
     pass
 
 
@@ -228,28 +178,43 @@ def convert_to_path_pair(local_file_list, class_file_dir, remote_class_dir):
     pass
 
 
-def deploy_all_files():
-    '''
-    全量部署，除了部分配置文件
+def backup_remote_dir(remote_dir_path, ssh):
+    # rm -rf WEB-INF2018*;curdate=`date +%Y%m%d%H%M%S`;echo $curdate;tar -zcf WEB-INF${curdate}.tar.gz WEB-INF
+    check_dir_cmd = 'if [ ! -d "' + remote_dir_path +'" ]; then echo "n"; else echo "y"; fi;'
+    # check_dir_cmd = 'if [ ! -d "' + remote_dir_path +'" ]; then exit 1; else exit 2; fi;'
+    print('check_dir_cmd:', check_dir_cmd)
+    stdin, stdout, stderr = ssh.exec_command(check_dir_cmd)
+    std_our_str = bytes.decode(stdout.read()).strip()
+    print('if stdout result:', std_our_str)
+    print('if stderr result:', bytes.decode(stderr.read()))
+    if std_our_str == 'n':
+        print('go n')
+        ssh.exec_command('mkdir -p ' + remote_dir_path)
+        pass
+    cmd = 'cd ' + remote_dir_path + ';cd ..; rm -rf WEB-INF20*;' + \
+          'curdate=`date +%Y%m%d%H%M%S`;echo $curdate;tar -zcf WEB-INF${curdate}.tar.gz WEB-INF'
+    stdin, stdout, stderr = ssh.exec_command(cmd)
+    print('stdout result:', bytes.decode(stdout.read()))
+    print('stderr result:', bytes.decode(stderr.read()))
+    pass
+
+
+def send_dir_to_remote(local_dir_path, remote_dir_path, sftp, ssh, exclude_file_list=[]):
+    """
+    本地文件夹发送到远程目录。
+    sftp只支持文件put，所以需要遍历目录。
+    如果远程文件夹不存在是否需要先新建？
+    :param local_dir_path:
+    :param remote_dir_path:
+    :param sftp:
     :return:
-    '''
-    # 编译
-    compile_rs = os.popen(r'compile.bat')
-    print('compile result:', compile_rs.read())
-    # continue_flag = input('press "r" to return, press other keys to continue')
-    # if 'r'==continue_flag:
-    #     print('return !!!')
-    #     return
-    # print('continue !!!')
-    config = configparser.ConfigParser()
-    config.read('config-uncommit.ini')
-    class_file_dir = config.get('sendToServer','class_file_dir')
+    """
     all_deploy_file_list = []
     # 不更新的文件
-    exclude_file_list = ['applicationContext.xml','applicationContext-shiro.xml','disconf.properties'
-                         ,'dubbo.properties','ehcache.xml','jdbc.properties','log4j.properties','mail.properties'
-                         ,'mybatis-config.xml','redis.properties','spring-mvc.xml']
-    all_deploy_file_list.extend(get_files_from_dir(class_file_dir))
+    # exclude_file_list = ['applicationContext.xml', 'applicationContext-shiro.xml', 'disconf.properties'
+    #     , 'dubbo.properties', 'ehcache.xml', 'jdbc.properties', 'log4j.properties', 'mail.properties'
+    #     , 'mybatis-config.xml', 'redis.properties', 'spring-mvc.xml']
+    all_deploy_file_list.extend(get_files_from_dir(local_dir_path))
     final_file_list = []
     final_file_list.extend(all_deploy_file_list)
     # 如果一边循环一边删除，再加上内部的判断，会出现错乱
@@ -260,25 +225,78 @@ def deploy_all_files():
                 final_file_list.remove(deploy_file)
                 break
         pass
-    remote_class_dir = config.get('sendToServer','remote_class_dir')
-    file_path_pair = convert_to_path_pair(final_file_list, class_file_dir, remote_class_dir)
-    host = config.get('sendToServer','dev_host')
-    name = config.get('sendToServer','dev_username')
-    password = config.get('sendToServer','dev_pw')
-    send_file_sftp_pair(host, 22, name, password, file_path_pair)
-    restart_server(host, 22, username, password)
+    for file in final_file_list:
+        remote_file_path = file.replace(local_dir_path, remote_dir_path)
+        print('localpath:', file)
+        print('local_dir_path:', local_dir_path)
+        print('remote_dir_path:', remote_dir_path)
+        print('remotepath:', remote_file_path)
+        dir_path = remote_file_path.replace(os.path.basename(remote_file_path), '')
+        stdin, stdout, stderr = ssh.exec_command('mkdir -p ' + dir_path)
+        print('dir_path:', dir_path)
+        print('mkdir stdout result:', bytes.decode(stdout.read()))
+        print('mkdir stderr result:', bytes.decode(stderr.read()))
+        sftp.put(localpath=file, remotepath=remote_file_path)
+        pass
+    pass
+
+
+def check_dir_exists(path, seperator='/'):
+    path.split(seperator)
+    path = path.replace(os.path.basename(path),'')
+    print('path:', path)
+    pass
+
+
+def deploy_all_files():
+    '''
+    全量部署，除了部分配置文件
+    :return:
+    '''
+    # 编译
+    # compile_rs = os.popen(r'compile.bat')
+    # print('compile result:', compile_rs.read())
+    # continue_flag = input('press "r" to return, press other keys to continue')
+    # if 'r'==continue_flag:
+    #     print('return !!!')
+    #     return
+    # print('continue !!!')
+    config = configparser.ConfigParser()
+    config.read('config-uncommit.ini')
+    class_file_dir = config.get('sendToServer','class_file_dir')
+
+    # remote_class_dir = config.get('sendToServer','remote_class_dir')
+    remote_class_dir = r'/app/apache-tomcat-7-sc/webapps/SC/test-dir/classes'
+    # get ssh
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    host = '192.168.200.238'; port = 22; username = 'dev-sc'; password = 'hgHHJ?@!#'
+    ssh.connect(hostname=host, port=port, username=username, password=password)
+    # 备份服务器的文件
+    backup_remote_dir(remote_class_dir, ssh)
+    # 本地文件夹copy到远程，覆盖操作
+    # 不更新的文件
+    exclude_file_list = ['applicationContext.xml', 'applicationContext-shiro.xml', 'disconf.properties'
+        , 'dubbo.properties', 'ehcache.xml', 'jdbc.properties', 'log4j.properties', 'mail.properties'
+        , 'mybatis-config.xml', 'redis.properties', 'spring-mvc.xml']
+    trans = paramiko.Transport(host, port)
+    trans.connect(username=username, password=password)
+    sftp = paramiko.sftp_client.SFTPClient.from_transport(trans)
+
+    # send_dir_to_remote(class_file_dir, remote_class_dir, sftp, ssh, exclude_file_list)
+    # 重启tomcat
+    # restart_server(host, 22, username, password)
+    # restart_server_ssh(ssh)
+    ssh.close()
+    sftp.close()
     pass
 
 if __name__ == "__main__":
-    config = configparser.ConfigParser()
-    config.read('config-uncommit.ini')
-
-    # host = config.get('sendToServer', 'local_host'); port = 22;
-    # username = config.get('sendToServer', 'local_username'); password = config.get('sendToServer', 'local_pw');
+    # config = configparser.ConfigParser()
+    # config.read('config-uncommit.ini')
     host = '192.168.200.238'; port = 22; username = 'dev-sc'; password = 'hgHHJ?@!#'
     # restart_server(host, port, username, password)
-    # deploy_all_files()
-
-
+    deploy_all_files()
+    # check_dir_exists('/app/apache-tomcat-7-sc/webapps/SC/test-dir/classes')
     pass
 

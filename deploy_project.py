@@ -51,63 +51,6 @@ def send_file_sftp_pair(host, port, username, password, path_pair):
     pass
 
 
-def exec_command_sftp():
-    '''
-    sftp连接并执行命令
-    :return:
-    '''
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname=host, port=22, username=username, password=password)
-    stdin, stdout, stderr = ssh.exec_command('cd /app/apache-tomcat-7-sc')
-    ssh.close()
-    pass
-
-
-def exec_command_ssh(ssh):
-    '''
-    ssh连接并执行命令
-    :param ssh:
-    :return:
-    '''
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(hostname=host, port=22, username=username, password=password)
-    stdin, stdout, stderr = ssh.exec_command('cd /app/apache-tomcat-7-sc')
-    ssh.close()
-    pass
-
-
-def exec_command_ftp(host, port):
-    '''
-    ftp连接并执行命令
-    '''
-    conn = ftplib.FTP()
-    conn.connect(host,port)
-    conn.login(username,password)
-    conn.set_pasv(False)
-    conn.cwd('/app/apache-tomcat-7-sc')
-    conn.close()
-    pass
-
-
-def get_class_paths(java_path, local_class_dir, remote_class_dir):
-    start_idx = java_path.find('src/main/java')
-    result = []
-    if start_idx>-1:
-        result.append(local_class_dir + '/' + ''.join(java_path[start_idx+1:]).replace('.java', '.class'))
-        result.append(remote_class_dir + '/' + ''.join(java_path[start_idx+1:]).replace('.java', '.class'))
-        pass
-
-    start_idx = java_path.find('src/main/resources')
-    result = []
-    if start_idx > -1:
-        result.append(local_class_dir + '/' + ''.join(java_path[start_idx + 1:]))
-        result.append(remote_class_dir + '/' + ''.join(java_path[start_idx + 1:]))
-        pass
-    pass
-
-
 def restart_server(host, port, username, password):
     """
     ssh连接服务器，执行shell命令
@@ -133,29 +76,7 @@ def restart_server(host, port, username, password):
     stdin, stdout, stderr = ssh.exec_command('source /etc/profile;/app/apache-tomcat-7-sc/bin/startup.sh')
     print('stdout result:', bytes.decode(stdout.read()))
     print('stderr result:', bytes.decode(stderr.read()))
-    ssh.close()
-    pass
-
-
-def convert_to_absolute_path(file_name, root_dir):
-    '''
-    在指定目录里搜索，将文件名转换成完整路径
-    需要把路径分隔符（正反斜杠）转换成一致
-    :return:
-    '''
-    absolute_file_name = ''
-    if os.path.isdir(root_dir):
-        for parent, dirnames, filenames in os.walk(root_dir):
-            for filename in filenames:
-                if filename==file_name:
-                    # 完整路径
-                    absolute_file_name = os.path.join(parent, filename)
-                    # 可以返回了
-                    return absolute_file_name.replace('\\','/')
-                pass
-            pass
-        pass
-    return absolute_file_name
+    # print('stdout:',out)
     pass
 
 
@@ -181,14 +102,6 @@ def deploy_all_files():
     全量部署，除了部分配置文件
     :return:
     '''
-    # 编译
-    compile_rs = os.popen(r'compile.bat')
-    print('compile result:', compile_rs.read())
-    continue_flag = input('press "r" to return, press other keys to continue')
-    if 'r'==continue_flag:
-        print('return !!!')
-        return
-    print('continue !!!')
     config = configparser.ConfigParser()
     config.read('config-uncommit.ini')
     class_file_dir = config.get('sendToServer','class_file_dir')
@@ -218,15 +131,8 @@ def deploy_all_files():
     pass
 
 if __name__ == "__main__":
-    config = configparser.ConfigParser()
-    config.read('config-uncommit.ini')
-
-    # host = config.get('sendToServer', 'local_host'); port = 22;
-    # username = config.get('sendToServer', 'local_username'); password = config.get('sendToServer', 'local_pw');
     host = '192.168.200.238'; port = 22; username = 'dev-sc'; password = 'hgHHJ?@!#'
     # restart_server(host, port, username, password)
     deploy_all_files()
-    # b = os.popen(r'D:/compile.bat')
-
     pass
 

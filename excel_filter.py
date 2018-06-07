@@ -103,9 +103,6 @@ def filter_rule5(data_dict):
     return rs_dict
 
 
-
-
-
 if __name__ == "__main__":
     # excel_read_path = r'C:\Users\duanyaochang\Desktop\temp\2017gj.xls'
     # excel_write_path = r'C:\Users\duanyaochang\Desktop\temp\2017gj222.xls'
