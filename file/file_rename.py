@@ -1,7 +1,18 @@
 import os
 
+"""
+改文件的后缀名
+rename_to_txt：把文件后缀名改成.txt
+rename_to_original：与rename_to_txt配套，还原成原来的后缀名
+"""
 
 def rename_to_txt(dir_path):
+    """
+    success
+    把文件后缀名改成.txt
+    :param dir_path:
+    :return:
+    """
     for parent, dirnames, filenames in os.walk(dir_path):
         for filename in filenames:
             if not filename.endswith('.txt'):
@@ -18,6 +29,12 @@ def rename_to_txt(dir_path):
     pass
 
 def rename_to_original(dir_path):
+    """
+    success
+    与rename_to_txt配套，还原成原来的后缀名
+    :param dir_path:
+    :return:
+    """
     for parent, dirnames, filenames in os.walk(dir_path):
         for filename in filenames:
             if filename.find('$') > -1:

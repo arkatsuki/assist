@@ -42,12 +42,7 @@ first_last_url = r'http://192.168.200.248:8080/grid/att/FirstLast/'
 abnormal_url = r'http://192.168.200.248:8080/grid/att/DayAbnormal/'
 
 # 请求参数
-# 成佳林  1609
 # self 1432
-# 小骥  2088
-# 李利  2108
-# 李芳  2981
-# 秀莲  1953
 user_id = 2088
 search_params = {'page': '1',
                  'rp': '20',

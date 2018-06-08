@@ -1,7 +1,17 @@
 
-def bubble_sort(self, unsorted_list):
+
+"""
+一些算法。
+bubble_sort_asc：冒泡排序，升序排列。
+binary_search：二分查找。
+binary_search_insert_asc：二分查找，插入新元素，升序。
+binary_search_insert_desc：二分查找，插入新元素，降序。
+binary_insert_list_desc：二分查找，插入list，降序。
+"""
+
+
+def bubble_sort_asc(self, unsorted_list):
     """
-    success
     冒泡排序，升序排列
     :param unsorted_list:
     :return:
@@ -41,7 +51,7 @@ def binary_search(find, list1) :
     return -1
 
 
-def binary_search_asc(new_num, num_list) :
+def binary_search_insert_asc(new_num, num_list) :
     '''
     初步测试通过，未覆盖所有情况
     二分插入有序列表，升序排列
@@ -89,7 +99,7 @@ def binary_search_asc(new_num, num_list) :
     return num_list
 
 
-def binary_search_desc(new_num, num_list) :
+def binary_search_insert_desc(new_num, num_list) :
     '''
     初步测试通过，未覆盖所有情况
     二分插入有序列表，降序排列
@@ -231,8 +241,8 @@ if __name__ == "__main__":
     # list1 = [1, 11, 13, 15, 7, 5, 3, 2, 1, 3, 5, 17, 19, 10]
     list2 = []
     for elem in list1:
-        binary_search_desc(elem, list2)
-        # binary_search_asc(elem, list2)
+        binary_search_insert_desc(elem, list2)
+        # binary_search_insert_asc(elem, list2)
         pass
 
     print('list2:',list2)
