@@ -11,8 +11,9 @@ import datetime
 
 
 """
-pass
+success
 将指定目录下的所有文件改写成utf-8编码。源目录会先进行备份。
+逐个字节比较两个文件是否相同。比较两个目录的所有文件是否相同（包括所有层级，包括文件路径也要相同）。
 """
 
 
@@ -60,6 +61,7 @@ def copy_file_dir(sour_path, dest_path=''):
 
 def get_charset():
     """
+    unused
     检测数据的编码类型
     :return:
     """
@@ -113,10 +115,10 @@ def rewrite_file_all_code(path, path_new):
     f = open(path_new, 'rb')
     data = f.read()
     # data = f.read(20)
-    print(chardet.detect(data))
+    # print(chardet.detect(data))
     charset_dict = chardet.detect(data)
     encoding = charset_dict['encoding']
-    print('encoding:', encoding)
+    # print('encoding:', encoding)
     # print('find uti-8:', encoding.lower().find('utf-8'))
     # if encoding!=None and encoding.lower().find('utf-8')<0:
     #     encoding='gbk'
@@ -152,6 +154,7 @@ def get_all_files(path):
 
 def modify_charset():
     """
+    success
     把指定目录下的所有文件改成utf-8编码。源文件夹先会备份。
     :return:
     """
@@ -167,32 +170,79 @@ def modify_charset():
     pass
 
 
-def compare_file():
+def compare_file(file1_path, file2_path):
     """
+    Success
     逐个字节比较文件内容
-    :return:
+    :return: False or True
     """
-    file1_path = 'd:/LnAppCalcInfoServiceImpl1111.class'
+    # file1_path = 'd:/LnAppCalcInfoServiceImpl1111.class'
     # file2_path = 'd:/LnAppAttachInfoServiceImpl.class'
-    file2_path = 'd:/LnAppCalcInfoServiceImpl.class'
+    # file2_path = 'd:/LnAppCalcInfoServiceImpl.class'
     file1 = open(file1_path, 'rb')
     file2 = open(file2_path, 'rb')
-    # with open(file2_path, 'rb') as file2:
-    #     file1.read()
-    #     pass
-    print('size:', os.path.getsize(file1_path))
-    for i in range(0, os.path.getsize(file1_path)):
-        # print(i)  # 到size-1
-        file1.read(i)
+    file1_size = os.path.getsize(file1_path)
+    file2_size = os.path.getsize(file2_path)
+    # print('file1_size:', file1_size, 'file2_size:', file2_size)
+    if file1_size != file2_size:
+        # print('not equal')
+        return False
+    for i in range(0, file1_size):
+        # print(i)  # 从 0 到 file1_size - 1
+        # print(file1.read(i)==file2.read(i))
+        if file1.read(i) != file2.read(i):
+            return  False
         pass
     file1.close()
     file2.close()
+    return  True
 
 
+def compare_dir(dir1_path, dir2_path):
+    """
+    success
+    比较两个目录是否相等：所有文件数量、路径相同，内容相同（逐个字节比较），最后print比较结果。
+    :return:
+    """
+    dir1_path = 'D:/test-sth/classes-rel'
+    dir2_path = 'D:/test-sth/classes-uat'
+    dir1_all_files = get_all_files(dir1_path)
+    dir2_all_files = get_all_files(dir2_path)
+    dir1_surplus = []   # dir1多余的文件
+    dir2_surplus = []   # dir2多余的文件
+    unequal_files = []    # 不相同的文件
+    dir1_surplus.extend(dir1_all_files)
+    dir2_surplus.extend(dir2_all_files)
+    # if len(dir1_all_files) != len(dir2_all_files):
+    #     pass
+    for dir1_file in dir1_all_files:
+        dir2_file = dir1_file.replace(dir1_path, dir2_path)
+        # print('dir1_file:', dir1_file)
+        # print('dir2_file:', dir2_file)
+        if dir2_file not in dir2_all_files:
+            continue
+        dir1_surplus.remove(dir1_file)
+        dir2_surplus.remove(dir2_file)
+        if not compare_file(dir1_file, dir2_file):
+            unequal_files.append(dir1_file)
+            pass
+        pass
+    print_list(unequal_files, 'unequal_files:')
+    print_list(dir1_surplus, 'dir1_surplus:')
+    print_list(dir2_surplus, 'dir2_surplus:')
     pass
+
+
+def print_list(list, prefix='', surfix=''):
+    for elem in list:
+        print(prefix, elem, surfix)
+        pass
+    pass
+
 
 if __name__ == "__main__":
     # modify_charset()
-    compare_file()
+    # compare_file()
+    compare_dir()
     pass
 

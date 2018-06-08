@@ -4,6 +4,12 @@ import configparser
 
 
 def compare_list(list1, list2):
+    """
+    比较两个list的内容
+    :param list1:
+    :param list2:
+    :return:
+    """
     file_path_different_list = []  # 存放不一致的文件
     for elem in list1:
         if elem.strip() not in list2:
@@ -28,6 +34,12 @@ def compare_list(list1, list2):
 
 
 def compare_file(file1_path, file2_path):
+    """
+    逐行比较两个文件。
+    :param file1_path:
+    :param file2_path:
+    :return:
+    """
     file1_list = []
     file2_list = []
     with open(file1_path, 'r') as f:

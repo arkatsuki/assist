@@ -6,7 +6,6 @@ ok
 def replace_str(file_path, old_str, new_str):
     """
     替换文件中的某个字符串，不支持跨行的情况
-
     :param file_path: 文件绝对路径
     :param new_str: 新字符串
     :param old_str: 旧字符串

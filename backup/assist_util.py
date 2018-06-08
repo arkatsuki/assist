@@ -1,8 +1,3 @@
-
-import excel_operation
-import re
-
-
 def bubble_sort(self, unsorted_list):
     """
     冒泡排序，升序排列

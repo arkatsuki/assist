@@ -4,7 +4,7 @@ import configparser
 from svn_record_operationV3D import SvnRecordOperation
 
 '''
-note: 初步测试，可用
+success
 '''
 
 # 从配置文件取数据
