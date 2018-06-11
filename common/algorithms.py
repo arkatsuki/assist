@@ -230,6 +230,25 @@ def binary_insert_list_desc(new_elem, num_list, index):
     return num_list
 
 
+def te_bubble_sort():
+    """
+    测试冒泡排序
+    :return:
+    """
+    te_li = [4, 2, 6, 3, 7, 1, 9, 2]
+    for i in range(0, len(te_li) - 1):
+        for j in range(0, len(te_li) - 1 - i):
+            if te_li[j] > te_li[j + 1]:
+                temp = te_li[j]
+                te_li[j] = te_li[j + 1]
+                te_li[j + 1] = temp
+                pass
+            pass
+        pass
+    print(te_li)
+    pass
+
+
 if __name__ == "__main__":
     # list1 = [1,3,5,7,9,11,13,15,17,19]
     # list2 = binary_search(9, list1)
