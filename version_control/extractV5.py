@@ -1,15 +1,17 @@
 
 import os
 import configparser
-from version_control.svn_record_operationV4T import SvnRecordOperation
+from version_control.svn_record_operationV5 import SvnRecordOperation
 
 '''
 success
+get_orig_svn_info: 使用svn log命令获取提交信息。信息封装在list里，每一行是一个元素。返回这个list。
+get_svn_rec_oper: 处理svninfo，返回一个SvnRecordOperation对象。
 '''
 
 # 从配置文件取数据
 config = configparser.ConfigParser()
-config.read('/config-uncommit.ini')
+config.read('config-uncommit.ini')
 # svn_addr = config.get('svn','svn_addr')
 # user_name = config.get('svn','user_name')
 # version_num = config.get('svn','version_num')
@@ -17,8 +19,11 @@ config.read('/config-uncommit.ini')
 branch_name = config.get('svn','branch_name') # 哪个分支
 
 
-
 def get_orig_svn_info():
+    """
+    使用svn log命令获取提交信息。信息封装在list里，每一行是一个元素。返回这个list。
+    :return:  返回包含提交信息的list。
+    """
     # svn_log_command = 'svn log --limit {0} --search {1} --search-and {2} -v {3}'
     # svn log -r {2017-12-29}:{2018-01-10} -v http://192.168.200.233:8888/svn/CN/Develop/projects/branches/DEV/cnweb_sc
     # svn log -r {2018-02-10}:{2017-12-29} --search 1647 --search-and duanyaochang -v http://192.168.200.233:8888/svn/CN/Develop/projects/branches/DEV/cnweb_sc
@@ -43,6 +48,11 @@ def get_orig_svn_info():
 
 
 def get_svn_rec_oper(svninfo):
+    """
+    处理svninfo，返回一个SvnRecordOperation对象。
+    :param svninfo: 用svn log命令返回的信息，是一个list。
+    :return:  一个SvnRecordOperation对象。
+    """
     rec_oper = SvnRecordOperation()
     current_base_info = ['', '']  # 存放版本号、提交人信息，先存俩空字符串站位，避免第一次赋值报异常
     version_num_list = [] # 存放提交的所有版本号
@@ -89,9 +99,12 @@ def get_svn_rec_oper(svninfo):
 
 
 if __name__ == "__main__":
+    # 使用svn log命令获取提交信息
     svninfo = get_orig_svn_info()
+    # 处理信息，得到一个SvnRecordOperation对象。
     record_oper = get_svn_rec_oper(svninfo)
     excel_path = r'D:\svn info2.xls'
+    # 输出excel。
     record_oper.write_excel(excel_path)
-    print('version_num_list record_oper:', ','.join(record_oper.version_num_list))
+    # print('version_num_list record_oper:', ','.join(record_oper.version_num_list))
     pass

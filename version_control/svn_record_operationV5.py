@@ -1,9 +1,14 @@
 import xlwt
 import time
 # import version_control.svn_record.SvnRecord
+# 单用import的话在使用时需要带前缀。用from import就不用前缀。
 from version_control.svn_record import SvnRecord
 from common.algorithms import bubble_sort_asc
 
+
+"""
+success
+"""
 
 class SvnRecordOperation(object):
     """
@@ -25,7 +30,7 @@ class SvnRecordOperation(object):
     @property
     def version_num_list(self):
         # 每次获取version_num_list的值的时候，进行升序排序
-        # 属性名前面必须有一个下划线，否则会报无限递归错误
+        # 属性名前面必须有一个下划线，否则会报无限递归错误。其它模块引用时不用带下划线。
         return bubble_sort_asc(self._version_num_list)
 
     # 不定义的话就没法设置version_num_list的值，及时__init__里面的self.也没法设置。
@@ -43,8 +48,8 @@ class SvnRecordOperation(object):
         :param action: 增删改
         :return:
         """
-        if not version_num in self.version_num_list:
-            self.version_num_list.append(version_num)
+        if not version_num in self._version_num_list:
+            self._version_num_list.append(version_num)
             # 统一在get的时候进行升序排序
             pass
         if file_path in self.v_num_act_dict.keys():
@@ -81,9 +86,9 @@ class SvnRecordOperation(object):
         for file_path, record in self.record_all.items():
             # 调整版本号和action
             # print('before:', self.v_num_act_dict[file_path])
-            self.amend_v_num_act(self.v_num_act_dict[file_path])
+            SvnRecordOperation.amend_v_num_act(self.v_num_act_dict[file_path])
             # print('te_after2:', self.v_num_act_dict[file_path])
-            v_num_act_final = self.convert_ver_num_act(self.v_num_act_dict[file_path][0],
+            v_num_act_final = SvnRecordOperation.convert_ver_num_act(self.v_num_act_dict[file_path][0],
                                                        self.v_num_act_dict[file_path][-1])
             # 如果返回的是空，说明这个文件最后一次操作是删除，不需要写进清单
             if len(v_num_act_final) < 1:
@@ -102,7 +107,7 @@ class SvnRecordOperation(object):
         pass
 
     @staticmethod
-    def _amend_v_num_act(v_num_act_list):
+    def amend_v_num_act(v_num_act_list):
         """
         不需要用self的东西，所以是static。单下划线开头的子类可以访问，双下划线开头的只有自己能访问。
         冒泡排序，按版本号升序排列
@@ -121,7 +126,7 @@ class SvnRecordOperation(object):
         pass
 
     @staticmethod
-    def _convert_ver_num_act(first, last):
+    def convert_ver_num_act(first, last):
         """
         不需要用self的东西，所以是static。单下划线开头的子类可以访问，双下划线开头的只有自己能访问。
         对于提交多次的，需要调整版本号和action（增删改）
@@ -187,6 +192,7 @@ class SvnRecordOperation(object):
         book.save(excel_path)
         pass
     pass
+pass
 
 
 def te_bubble_sort():

@@ -5,8 +5,8 @@ import xml.etree.ElementTree as ET
 """
 
 
-def set_tag_content(node, content_dict):
-    for k, v in content_dict.items():
+def set_tag_content(node, data_dict):
+    for k, v in data_dict.items():
         search_str = './'
         namespace = '{http://maven.apache.org/POM/4.0.0}'
         if k.find('$') < 0:

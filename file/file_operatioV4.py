@@ -12,8 +12,15 @@ import datetime
 
 """
 success
-将指定目录下的所有文件改写成utf-8编码。源目录会先进行备份。
-逐个字节比较两个文件是否相同。比较两个目录的所有文件是否相同（包括所有层级，包括文件路径也要相同）。
+copy_file_dir: 使用windows系统命令复制文件/目录。复制目录可行，复制文件有问题待调试。
+get_charset: 未使用。检测数据的编码类型。
+rewrite_file_dir: 以utf-8格式重写文件/文件夹到指定路径。
+rewrite_file: 以utf-8格式重写文件（不包括目录）到指定路径。
+get_all_files: 获取指定目录中所有的文件的路径，包括子目录下的文件。
+modify_charset: 把指定目录下的所有文件改成utf-8编码。源目录会先复制备份。
+compare_file_byte: 逐个字节比较文件是否相等。
+compare_dir：比较两个目录是否相等。包括子目录及其文件的内容、数量、路径。
+print_list: 打印list的元素，可以指定打印结果的前后缀。
 """
 
 
@@ -59,10 +66,10 @@ def copy_file_dir(sour_path, dest_path=''):
         pass
     return backup_name
 
+
 def get_charset():
     """
-    unused
-    检测数据的编码类型
+    未使用。检测数据的编码类型。
     :return:
     """
     dir_path='D:/test-file.txt'
@@ -78,7 +85,7 @@ def get_charset():
 
 def rewrite_file_dir(path, path_new):
     """
-    以utf-8格式重写文件/文件夹到指定路径
+    以utf-8格式重写文件/文件夹到指定路径。
     :param path:
     :param path_new:
     :return:
@@ -89,19 +96,19 @@ def rewrite_file_dir(path, path_new):
         for file_path in all_files:
             file_path_new = file_path.replace(path, path_new)
             print('file_path_new:', file_path_new)
-            rewrite_file_all_code(file_path, file_path_new)
+            rewrite_file(file_path, file_path_new)
             pass
         pass
     else:
         print('rewrite_file_dir, not dir')
-        rewrite_file_all_code(path, path_new)
+        rewrite_file(path, path_new)
         pass
     pass
 
 
-def rewrite_file_all_code(path, path_new):
+def rewrite_file(path, path_new):
     """
-    以utf-8格式重写文件到指定路径
+    以utf-8格式重写文件（不包括目录）到指定路径。
     :param path:
     :param path_new:
     :return:
@@ -135,14 +142,14 @@ def rewrite_file_all_code(path, path_new):
     pass
 
 
-def get_all_files(path):
+def get_all_files(dir_path):
     """
-    获取文件夹中所有的文件的路径
-    :param path:
+    获取指定目录中所有的文件的路径，包括子目录下的文件。
+    :param dir_path:
     :return:
     """
     all_files = []
-    for parent, dirnames, filenames in os.walk(path):
+    for parent, dirnames, filenames in os.walk(dir_path):
         for filename in filenames:
             # 完整路径
             file_path_old = os.path.join(parent, filename).replace('\\', '/')
@@ -155,7 +162,7 @@ def get_all_files(path):
 def modify_charset():
     """
     success
-    把指定目录下的所有文件改成utf-8编码。源文件夹先会备份。
+    把指定目录下的所有文件改成utf-8编码。源目录会先复制备份。
     :return:
     """
     # path_sour='D:/test-dir'
@@ -170,10 +177,10 @@ def modify_charset():
     pass
 
 
-def compare_file(file1_path, file2_path):
+def compare_file_byte(file1_path, file2_path):
     """
     Success
-    逐个字节比较文件内容
+    逐个字节比较文件内容。
     :return: False or True
     """
     # file1_path = 'd:/LnAppCalcInfoServiceImpl1111.class'
@@ -227,7 +234,7 @@ def compare_dir(dir1_path, dir2_path):
             continue
         dir1_surplus.remove(dir1_file)
         dir2_surplus.remove(dir2_file)
-        if not compare_file(dir1_file, dir2_file):
+        if not compare_file_byte(dir1_file, dir2_file):
             unequal_files.append(dir1_file)
             pass
         pass
@@ -246,7 +253,7 @@ def print_list(list, prefix='', surfix=''):
 
 if __name__ == "__main__":
     # modify_charset()
-    # compare_file()
+    # compare_file_byte()
     dir1_path = 'D:\\workplace\\eclipse3\\cnweb_task-dev\\src\\main'
     # dir2_path = 'D:/workplace/eclipse3/cnweb_task-sit/src/main'
     dir2_path = 'D:\\workplace\\eclipse3\\cnweb_task-sit\\src\\main'

@@ -10,7 +10,7 @@ binary_insert_list_desc：二分查找，插入list，降序。
 """
 
 
-def bubble_sort_asc(self, unsorted_list):
+def bubble_sort_asc(unsorted_list):
     """
     冒泡排序，升序排列
     :param unsorted_list:
@@ -25,7 +25,7 @@ def bubble_sort_asc(self, unsorted_list):
                 pass
             pass
         pass
-    pass
+    return unsorted_list
 
 
 def binary_search(find, list1) :
