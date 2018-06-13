@@ -100,7 +100,7 @@ def backup_remote_dir(dir_absolute_path, ssh):
     cmd = 'cd ..; rm -rf {dir_name}20*;' + \
           'curdate=`date +%Y%m%d%H%M%S`;' \
           'echo $curdate;tar -zcf {dir_name}${{curdate}}.tar.gz {dir_name}' \
-          ''.format({'dir_name':dir_absolute_path.replace(os.path.basename(dir_absolute_path), '')})
+          ''.format(dir_name=dir_absolute_path.replace(os.path.basename(dir_absolute_path), ''))
     print(cmd)
     stdin, stdout, stderr = ssh.exec_command(cmd)
     print('tar stdout result:', bytes.decode(stdout.read()))

@@ -27,9 +27,11 @@ def te_link():
 
 
 def te_str():
-    cmd = 'cd {0}; rm -rf {0}20*;' + \
-          'curdate=`date +%Y%m%d%H%M%S`;echo $curdate;tar -zcf {0}${{curdate}}.tar.gz {0}'
-    print(cmd.format('WEB-INFO'))
+    cmd = 'cd ..; rm -rf {dir_name}20*;' + \
+          'curdate=`date +%Y%m%d%H%M%S`;' \
+          'echo $curdate;tar -zcf {dir_name}${{curdate}}.tar.gz {dir_name}' \
+          ''.format(dir_name='aa')
+    print(cmd)
     pass
 
 

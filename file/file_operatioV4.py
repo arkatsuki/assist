@@ -254,9 +254,14 @@ def print_list(list, prefix='', surfix=''):
 if __name__ == "__main__":
     # modify_charset()
     # compare_file_byte()
-    dir1_path = 'D:\\workplace\\eclipse3\\cnweb_task-dev\\src\\main'
+    # dir1_path = 'E:\\tools-dev\\dabangongju\\task-rel\\output\\BackupFile_20180613092213\\target\\rpt_task_rel_201806130908\\WEB-INF\\classes'
     # dir2_path = 'D:/workplace/eclipse3/cnweb_task-sit/src/main'
-    dir2_path = 'D:\\workplace\\eclipse3\\cnweb_task-sit\\src\\main'
+    # dir1_path = 'E:\\tools-dev\\dabangongju\\task-rel\\output\\Exported\\target\\WEB-INF\\classes'
+    # dir2_path = 'E:\\tools-dev\\dabangongju\\task-uat\\output\\Exported\\target\\WEB-INF\\classes'
+    # dir2_path = 'E:\\tools-dev\\dabangongju\\task\\output\\Exported\\target\\WEB-INF\\classes'
+
+    dir1_path = 'D:\\workplace\\eclipse3\\cnweb_task-rel\\src\\main\\java'
+    dir2_path = 'D:\\workplace\\eclipse3\\cnweb_task-sit\\src\\main\\java'
     compare_dir(dir1_path, dir2_path)
     pass
 
