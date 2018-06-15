@@ -159,7 +159,7 @@ def get_all_files(dir_path):
     return all_files
 
 
-def modify_charset():
+def modify_charset(dir_path):
     """
     success
     把指定目录下的所有文件改成utf-8编码。源目录会先复制备份。
@@ -168,12 +168,12 @@ def modify_charset():
     # path_sour='D:/test-dir'
     # path_sour='D:/test-sth/test-dir'
     # path_dest='D:/test-sth/test-dir-backup'
-    path_sour='D:/test-sth/note-txt'
+    # dir_path= 'D:/test-sth/note-txt'
     # 先copy一份，然后用copy后的作为源文件，copy前的作为目的文件，重新用utf-8格式写
     # copy_file_dir(path_sour, path_dest)
     # 先清空原来的文件夹？
     # rewrite_file_dir(path_dest, path_sour)
-    rewrite_file_dir(copy_file_dir(path_sour), path_sour)
+    rewrite_file_dir(copy_file_dir(dir_path), dir_path)
     pass
 
 
@@ -252,7 +252,7 @@ def print_list(list, prefix='', surfix=''):
 
 
 if __name__ == "__main__":
-    # modify_charset()
+
     # compare_file_byte()
     # dir1_path = 'E:\\tools-dev\\dabangongju\\task-rel\\output\\BackupFile_20180613092213\\target\\rpt_task_rel_201806130908\\WEB-INF\\classes'
     # dir2_path = 'D:/workplace/eclipse3/cnweb_task-sit/src/main'
@@ -260,8 +260,11 @@ if __name__ == "__main__":
     # dir2_path = 'E:\\tools-dev\\dabangongju\\task-uat\\output\\Exported\\target\\WEB-INF\\classes'
     # dir2_path = 'E:\\tools-dev\\dabangongju\\task\\output\\Exported\\target\\WEB-INF\\classes'
 
-    dir1_path = 'D:\\workplace\\eclipse3\\cnweb_task-rel\\src\\main\\java'
-    dir2_path = 'D:\\workplace\\eclipse3\\cnweb_task-sit\\src\\main\\java'
-    compare_dir(dir1_path, dir2_path)
+    # dir1_path = 'D:\\workplace\\eclipse3\\cnweb_task-rel\\src\\main\\java'
+    # dir2_path = 'D:\\workplace\\eclipse3\\cnweb_task-sit\\src\\main\\java'
+    # compare_dir(dir1_path, dir2_path)
+
+    dir1_path = 'E:/file/note/note-txt'
+    modify_charset(dir1_path)
     pass
 
