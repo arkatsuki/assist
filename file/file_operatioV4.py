@@ -8,11 +8,13 @@ import chardet
 import json
 import time
 import datetime
+import shutil
 
 
 """
 success
 copy_file_dir: 使用windows系统命令复制文件/目录。复制目录可行，复制文件有问题待调试。
+copy_file_dir2: 使用shutil复制文件/目录。
 get_charset: 未使用。检测数据的编码类型。
 rewrite_file_dir: 以utf-8格式重写文件/文件夹到指定路径。
 rewrite_file: 以utf-8格式重写文件（不包括目录）到指定路径。
@@ -33,8 +35,7 @@ def copy_file_dir(sour_path, dest_path=''):
     :return:
     """
     timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-    backup_name = 'timestamp'
-    if dest_path=='':
+    if dest_path == '':
         backup_name = sour_path + '-' + timestamp
         pass
     else:
@@ -63,6 +64,62 @@ def copy_file_dir(sour_path, dest_path=''):
         print('cmd:',cmd)
         rs = os.popen(cmd)
         print(rs.read())
+        pass
+    return backup_name
+
+
+def copy_file_dir2(sour_path, dest_path='', backup=True):
+    """
+    success
+    :param sour_path:
+    :param dest_path:
+    :param backup: 复制前是否先进行备份
+    :return:
+    """
+    timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    backup_name = sour_path + '-' + timestamp
+    # 如果目的地址是空的，就是备份操作。
+    if dest_path == '':
+        backup = False
+        dest_path = backup_name
+        pass
+
+    if os.path.isfile(sour_path):
+        # 先备份
+        if backup:
+            shutil.copy(sour_path, backup_name)
+            pass
+        shutil.copy(sour_path, dest_path)
+        pass
+    else:
+        all_files_sour_list = get_all_files(sour_path)
+
+        # 先备份
+        if backup:
+            for file_sour in all_files_sour_list:
+
+                file_dest = file_sour.replace(sour_path, backup_name)
+                new_dir = file_dest[:file_dest.rfind('/')]
+                if not os.path.isdir(new_dir):
+                    os.mkdir(new_dir)
+                    pass
+                shutil.copy(file_sour, file_dest)
+                pass
+            pass
+
+        for file_sour in all_files_sour_list:
+            file_dest = file_sour.replace(sour_path, dest_path)
+            print('file_sour:', file_sour)
+            print('file_dest:', file_dest)
+            # 注意是从后往前找，用rfind而不是find。也不是index，index找不到不是-1是异常。
+            new_dir = file_dest[:file_dest.rfind('/')]
+            if not os.path.isdir(new_dir):
+                print('new_dir:', new_dir)
+                os.mkdir(new_dir)
+                pass
+            # 文件如果不存在会创建，但是路径上的目录如果不存在不会创建
+            shutil.copy(file_sour, file_dest)
+            pass
         pass
     return backup_name
 
@@ -253,18 +310,18 @@ def print_list(list, prefix='', surfix=''):
 
 if __name__ == "__main__":
 
-    # compare_file_byte()
-    # dir1_path = 'E:\\tools-dev\\dabangongju\\task-rel\\output\\BackupFile_20180613092213\\target\\rpt_task_rel_201806130908\\WEB-INF\\classes'
-    # dir2_path = 'D:/workplace/eclipse3/cnweb_task-sit/src/main'
-    # dir1_path = 'E:\\tools-dev\\dabangongju\\task-rel\\output\\Exported\\target\\WEB-INF\\classes'
-    # dir2_path = 'E:\\tools-dev\\dabangongju\\task-uat\\output\\Exported\\target\\WEB-INF\\classes'
-    # dir2_path = 'E:\\tools-dev\\dabangongju\\task\\output\\Exported\\target\\WEB-INF\\classes'
+    dir1_path = 'D:/test_dir/a1'
+    dir2_path = 'D:/test_dir/b1'
 
-    # dir1_path = 'D:\\workplace\\eclipse3\\cnweb_task-rel\\src\\main\\java'
-    # dir2_path = 'D:\\workplace\\eclipse3\\cnweb_task-sit\\src\\main\\java'
-    # compare_dir(dir1_path, dir2_path)
+    # dir1_path = 'D:/test_dir/a1/a1f.txt'
+    # dir2_path = 'D:/test_dir/b1/a1f.txt'
 
-    dir1_path = 'E:/file/note/note-txt'
-    modify_charset(dir1_path)
+    copy_file_dir2(dir1_path, dir2_path)
+
+
+    # pos = dir2_path.rfind('/')
+    # dir2_path = dir2_path[:dir2_path.rfind('/')]
+    # print(pos)
+    # print(dir2_path)
     pass
 
