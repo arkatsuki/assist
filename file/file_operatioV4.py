@@ -9,6 +9,8 @@ import json
 import time
 import datetime
 import shutil
+import hashlib
+import re
 
 
 """
@@ -21,7 +23,9 @@ rewrite_file: 以utf-8格式重写文件（不包括目录）到指定路径。
 get_all_files: 获取指定目录中所有的文件的路径，包括子目录下的文件。
 modify_charset: 把指定目录下的所有文件改成utf-8编码。源目录会先复制备份。
 compare_file_byte: 逐个字节比较文件是否相等。
-compare_dir：比较两个目录是否相等。包括子目录及其文件的内容、数量、路径。
+compare_file_md5_win: 调用windows命令计算文件md5，比较文件内容是否相同。可用于大文件。
+compare_file_md5_py: 调用python自带库计算文件md5，比较文件内容是否相同。大文件会报memory error。
+compare_dir：按字节比较两个目录是否相等。包括子目录及其文件的内容、数量、路径。
 print_list: 打印list的元素，可以指定打印结果的前后缀。
 """
 
@@ -259,18 +263,68 @@ def compare_file_byte(file1_path, file2_path):
         pass
     file1.close()
     file2.close()
-    return  True
+    return True
 
 
-def compare_dir(dir1_path, dir2_path):
+def compare_file_md5_win(file1_path, file2_path):
     """
     success
+    调用windows命令比较文件md5值。经测试11G的mp4文件计算md5要用60s。不用担心内存不够。
+    :return: False or True
+    """
+    comm_info1 = os.popen('certutil -hashfile ' + file1_path + ' md5').readlines()
+    md5_val1 = '1'
+    md5_val2 = '2'
+    if len(comm_info1) == 3 and comm_info1[2].find('命令成功完成')!=-1:
+        md5_val1 = comm_info1[1]
+        pass
+    else:
+        print(comm_info1)
+        return False
+    comm_info2 = os.popen('certutil -hashfile ' + file2_path + ' md5').readlines()
+
+    if len(comm_info2) == 3 and comm_info2[2].find('命令成功完成')!=-1:
+        md5_val2 = comm_info2[1]
+        pass
+    else:
+        print(comm_info2)
+        pass
+    if md5_val1 == md5_val2:
+        return True
+    else:
+        return False
+
+
+def compare_file_md5_py(file1_path, file2_path):
+    """
+    success
+    比较文件md5值。用的是python自带的库，如果文件太大会报MemoryError
+    :return: False or True
+    """
+    hash1 = '0'
+    hash2 = '1'
+    with open(file1_path, 'rb') as f:
+        md5obj = hashlib.md5()
+        md5obj.update(f.read())
+        hash1 = md5obj.hexdigest()
+    with open(file2_path, 'rb') as f:
+        md5obj = hashlib.md5()
+        md5obj.update(f.read())
+        hash2 = md5obj.hexdigest()
+    if hash1 == hash2:
+        return True
+    else:
+        return False
+
+
+def compare_dir(dir1_path, dir2_path, mode='m'):
+    """
+    success
+    mode：b 按字节比较。m 按md5值比较。
     比较两个目录是否相等：所有文件数量、路径相同，内容相同（逐个字节比较），最后print比较结果。
     可能是因为字节比较的原因，速度略慢。
     :return:
     """
-    # dir1_path = 'D:/test-sth/classes-rel'
-    # dir2_path = 'D:/test-sth/classes-uat'
     # 路径必须正斜杠分隔，因为get_all_files返回的是正斜杠分隔。必须一致。
     dir1_path = dir1_path.replace('\\', '/')
     dir2_path = dir2_path.replace('\\', '/')
@@ -291,8 +345,31 @@ def compare_dir(dir1_path, dir2_path):
             continue
         dir1_surplus.remove(dir1_file)
         dir2_surplus.remove(dir2_file)
-        if not compare_file_byte(dir1_file, dir2_file):
-            unequal_files.append(dir1_file)
+        if 'm' == mode:
+            file1_size = os.path.getsize(dir1_file)
+            file2_size = os.path.getsize(dir2_file)
+            if file1_size != file2_size:
+                unequal_files.append(dir1_file)
+                pass
+            # 100M
+            elif file1_size < 104857600:
+                if not compare_file_md5_py(dir1_file, dir2_file):
+                    unequal_files.append(dir1_file)
+                    pass
+                pass
+            else:
+                if re.search('.mp4|.rmvb|.avi', dir1_file) is not None:
+                    pass
+                else:
+                    if not compare_file_md5_win(dir1_file, dir2_file):
+                        unequal_files.append(dir1_file)
+                        pass
+                    pass
+            pass
+        else:
+            if not compare_file_byte(dir1_file, dir2_file):
+                unequal_files.append(dir1_file)
+                pass
             pass
         pass
     print_list(unequal_files, 'unequal_files:')
@@ -310,18 +387,36 @@ def print_list(list, prefix='', surfix=''):
 
 if __name__ == "__main__":
 
-    dir1_path = 'D:/test_dir/a1'
-    dir2_path = 'D:/test_dir/b1'
+    # dir1_path = 'D:/test_dir/a1'
+    # dir2_path = 'D:/test_dir/b1'
+    # dir1_path = 'H:/file/picture'
+    # dir1_path = 'D:/file-all/file-life'
+    # dir2_path = 'G:/file-life'
 
-    # dir1_path = 'D:/test_dir/a1/a1f.txt'
-    # dir2_path = 'D:/test_dir/b1/a1f.txt'
+    # dir1_path = 'D:/file-all/file-common'
+    # dir2_path = 'G:/file-common'
 
-    copy_file_dir2(dir1_path, dir2_path)
+    dir1_path = 'D:/file-all/file-dev'
+    dir2_path = 'G:/file-dev'
 
+    time1 = datetime.datetime.now()
+    compare_dir(dir1_path, dir2_path)
+    time2 = datetime.datetime.now()
+    print(time1)
+    print(time2)
 
-    # pos = dir2_path.rfind('/')
-    # dir2_path = dir2_path[:dir2_path.rfind('/')]
-    # print(pos)
-    # print(dir2_path)
+    # file1 = 'D:/test_dir/1.txt'
+    # with open(file1, 'r', encoding='utf-8') as f:
+    #     for path in f:
+    #         path = path.strip(' ').strip('\n').strip('\ufeff')
+    #         print('path:', path)
+    #         os.remove(path)
+    #         # c = input('y or n')
+    #         # if c == 'y':
+    #         #     os.remove(path)
+    #         #     pass
+    #         pass
+    #     pass
+
     pass
 

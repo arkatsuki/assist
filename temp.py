@@ -2,41 +2,71 @@ import ftplib
 import paramiko
 import os
 import configparser
+import datetime
+import hashlib
+import re
 
 
-def te_listdir():
-    dir_path = r'E:\tools-dev\dabangongju\sc-uat\output\Exported\target'
-    for f in os.listdir(dir_path):
-        print(f)
+def compare_file_md5_win(file1_path, file2_path):
+    """
+    success
+    调用windows命令比较文件md5值。经测试11G的mp4文件计算md5要用60s。不用担心内存不够。
+    :return: False or True
+    """
+    comm_info1 = os.popen('certutil -hashfile ' + file1_path + ' md5').readlines()
+    md5_val1 = '1'
+    md5_val2 = '2'
+    print(comm_info1)
+    if len(comm_info1)==3:
+        md5_val1 = comm_info1[1]
         pass
-    pass
+    else:
+        return False
+    comm_info2 = os.popen('certutil -hashfile ' + file2_path + ' md5').readlines()
+    print(comm_info2)
+    if len(comm_info2)==3:
+        md5_val2 = comm_info2[1]
+        pass
+    if md5_val1 == md5_val2:
+        return True
+    else:
+        return False
 
 
-def te_link():
-    ssh = paramiko.SSHClient()
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    # ssh.connect(hostname='123.57.56.45', port=22, username='appuser', password='c@c@i1go')
-    # ssh.connect(hostname='123.57.56.45', port=22, username='appuser', password='FM1KfZU$')
-    ssh.connect(hostname='123.57.56.45', port=22, username='appuser', password='FM1KfZU$')
-    # ssh.connect(hostname='123.57.56.45', port=22, username='cndev2', password='xOM!!2*x')
-    stdin, stdout, stderr = ssh.exec_command('cd /app/logs')
-    print('stdout:', stdout)
-    print('stderr:', stderr)
-    ssh.close()
-    pass
-
-
-def te_str():
-    cmd = 'cd ..; rm -rf {dir_name}20*;' + \
-          'curdate=`date +%Y%m%d%H%M%S`;' \
-          'echo $curdate;tar -zcf {dir_name}${{curdate}}.tar.gz {dir_name}' \
-          ''.format(dir_name='aa')
-    print(cmd)
-    pass
+def compare_file_md5_py(file1_path, file2_path):
+    """
+    success
+    比较文件md5值。用的是python自带的库，如果文件太大会报MemoryError
+    :return: False or True
+    """
+    hash1 = '0'
+    hash2 = '1'
+    with open(file1_path, 'rb') as f:
+        md5obj = hashlib.md5()
+        md5obj.update(f.read())
+        hash1 = md5obj.hexdigest()
+        print(hash1)
+    with open(file2_path, 'rb') as f:
+        md5obj = hashlib.md5()
+        md5obj.update(f.read())
+        hash2 = md5obj.hexdigest()
+        print(hash2)
+    if hash1 == hash2:
+        return True
+    else:
+        return False
 
 
 if __name__ == "__main__":
-    te_str()
+    file1_path = 'D:/test_dir/1.txt'
+    file2_path = 'D:/test_dir/2.txt'
+    # file2_path = 'D:/file-all/file-history/玖富/2017年会-跨年盛典全程.mp4'
+
+    # time1 = datetime.datetime.now()
+    # print(time1)
+    if re.search('.txt|.mp4|.jpg|.png', file1_path) is not None:
+        print('searched')
+        pass
 
     pass
 
