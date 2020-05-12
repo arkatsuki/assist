@@ -27,6 +27,7 @@ compare_file_md5_win: 调用windows命令计算文件md5，比较文件内容是
 compare_file_md5_py: 调用python自带库计算文件md5，比较文件内容是否相同。大文件会报memory error。
 compare_dir：按字节比较两个目录是否相等。包括子目录及其文件的内容、数量、路径。
 print_list: 打印list的元素，可以指定打印结果的前后缀。
+creat_new_file：【未测试】创建新文件。
 """
 
 
@@ -119,9 +120,12 @@ def copy_file_dir2(sour_path, dest_path='', backup=True):
             new_dir = file_dest[:file_dest.rfind('/')]
             if not os.path.isdir(new_dir):
                 print('new_dir:', new_dir)
-                os.mkdir(new_dir)
+                # 文件如果不存在会创建，但是路径上的目录如果不存在不会创建
+                # os.mkdir(new_dir)
+                # 路径上所有的目录都可以创建出来
+                os.popen('md ' + new_dir)
                 pass
-            # 文件如果不存在会创建，但是路径上的目录如果不存在不会创建
+
             shutil.copy(file_sour, file_dest)
             pass
         pass
@@ -217,6 +221,7 @@ def get_all_files(dir_path):
             all_files.append(file_path_old)
             pass
         pass
+
     return all_files
 
 
@@ -385,6 +390,30 @@ def print_list(list, prefix='', surfix=''):
     pass
 
 
+def creat_new_file(file_path, cover_old='n'):
+    """
+    未测试！！！
+    创建新文件。
+    :param file_path: 文件路径。
+    :param cover_old: 是否覆盖旧文件。y or n。
+    :return:
+    """
+    if os.path.exists(file_path):
+        # os.path.isfile(file_path)
+        os.remove(file_path)
+        pass
+
+    # os.mkdir(file_path)
+    # print(os.path.dirname(file_path))
+    dirname = os.path.dirname(file_path)
+    os.popen('md '+ dirname)
+    f = open(file_path, 'w', encoding='utf-8')
+    f.close()
+
+    pass
+
+
 if __name__ == "__main__":
+    creat_new_file(r'D:\test_dir\temp_generate\aa\a.sql','y')
     pass
 
