@@ -7,12 +7,12 @@ from bs4 import BeautifulSoup
 import os
 
 
-def dowmloadPic(html):
-    """
-    缺点：有些答案，返回的是登录页面。所以，后续要考虑增加登录功能
-    :param html:
-    :return:
-    """
+def dowmloadPic():
+    html = ''
+    with open('D:\\temp\\testdir\\response_html.txt', 'r', encoding='utf-8') as fp_content:
+        html = fp_content.read()
+        pass
+
     # print('html:', html, '\n')
 
     # html.replace('<br>', '\n').replace('<br/>', '\n')   # 会报错a bytes-like object is required, not 'str'
@@ -20,13 +20,13 @@ def dowmloadPic(html):
     soup = BeautifulSoup(html, fromEncoding='gb18030') # 取标签内的汉字时，避免乱码
     # soup = BeautifulSoup(html, 'lxml')
     i = 0
+    # for box in soup.findAll('div', class_='RichContent RichContent--unescapable'):
 
     # 如果文件已经存在，先删除
     file_path = 'D:\\temp\\testdir\\content.txt'
     if os.path.exists(file_path):
         os.remove(file_path)
         pass
-    # for box in soup.findAll('div', class_='RichContent RichContent--unescapable'):
     for box in soup.findAll('div', class_='RichContent RichContent--unescapable'):
         print('box:', box, '\n')
 
@@ -45,9 +45,6 @@ def dowmloadPic(html):
             if src is not None:
                 print('src:', src, '\n')
                 i += 1
-
-                # if i <= 21:
-                #     continue
 
                 try:
                     pic = requests.get(src, timeout=60)
@@ -72,13 +69,4 @@ def dowmloadPic(html):
 
 
 if __name__ == '__main__':
-    # url = 'https://www.zhihu.com/question/385655582/answer/1164227477'
-    url = 'https://www.zhihu.com/question/300415423/answer/594273820'
-    # url = 'https://www.zhihu.com/api/v4/answers/997190122/root_comments?order=normal&limit=20&offset=20&status=open'
-    # url = 'https://www.zhihu.com/question/375265966/answer/1135813803'
-    headers = {
-
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36"
-    }
-    result = requests.get(url, headers=headers)
-    dowmloadPic(result.content)
+    dowmloadPic()

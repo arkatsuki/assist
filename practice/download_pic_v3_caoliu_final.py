@@ -33,8 +33,8 @@ def dowmloadPic(html):
                 print('src:', src, '\n')
                 i += 1
 
-                if i <= 21:
-                    continue
+                # if i <= 21:
+                #     continue
 
                 try:
                     pic = requests.get(src, timeout=60)

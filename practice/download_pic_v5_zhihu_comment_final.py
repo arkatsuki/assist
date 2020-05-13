@@ -18,7 +18,8 @@ def get_zhihu_comments():
     """
 
     # comments_url = answer_url + '/root_comments?order=normal&limit=20&offset=0&status=open'
-    comments_url = 'https://www.zhihu.com/api/v4/answers/997190122/root_comments?order=normal&limit=20&offset=0&status=open'
+    # comments_url = 'https://www.zhihu.com/api/v4/answers/997190122/root_comments?order=normal&limit=20&offset=0&status=open'
+    comments_url = 'https://www.zhihu.com/api/v4/answers/594273820/root_comments?order=normal&limit=20&offset=0&status=open'
     # 如果文件已经存在，先删除
     file_path = 'D:\\temp\\testdir\\content.txt'
     if os.path.exists(file_path):
@@ -132,7 +133,7 @@ def print_child_comments(child_comment_url, file_path):
 
 if __name__ == '__main__':
     # url = 'https://www.zhihu.com/question/357824038/answer/997190122'
-    url = 'https://www.zhihu.com/api/v4/answers/997190122'
+    # url = 'https://www.zhihu.com/api/v4/answers/997190122'
     # url = 'https://www.zhihu.com/api/v4/answers/997190122/root_comments?order=normal&limit=20&offset=20&status=open'
 
     get_zhihu_comments()
