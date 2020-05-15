@@ -73,7 +73,7 @@ def dowmloadPic(html):
 
 if __name__ == '__main__':
     # url = 'https://www.zhihu.com/question/385655582/answer/1164227477'
-    url = 'https://www.zhihu.com/question/300415423/answer/594273820'
+    url = 'https://www.zhihu.com/question/319637812/answer/844124334'
     # url = 'https://www.zhihu.com/api/v4/answers/997190122/root_comments?order=normal&limit=20&offset=20&status=open'
     # url = 'https://www.zhihu.com/question/375265966/answer/1135813803'
     headers = {

@@ -9,19 +9,24 @@ import os
 from urllib import parse
 
 
-def get_zhihu_comments():
+def get_zhihu_comments(*params):
     """
     获取知乎某个回答下面的评论
     缺点：
     :param comment_json:
     :return:
     """
-
+    answer_num = params[0]
+    file_path = params[1]
     # comments_url = answer_url + '/root_comments?order=normal&limit=20&offset=0&status=open'
     # comments_url = 'https://www.zhihu.com/api/v4/answers/997190122/root_comments?order=normal&limit=20&offset=0&status=open'
-    comments_url = 'https://www.zhihu.com/api/v4/answers/949312650/root_comments?order=normal&limit=20&offset=0&status=open'
+    comments_url = 'https://www.zhihu.com/api/v4/answers/' + answer_num + '/root_comments?order=normal&limit=20&offset=0&status=open'
     # 如果文件已经存在，先删除
-    file_path = 'D:\\temp\\testdir\\content.txt'
+    if file_path is None:
+        file_path = 'D:\\temp\\testdir\\content.txt'
+        pass
+
+
     if os.path.exists(file_path):
         os.remove(file_path)
         pass
@@ -80,7 +85,7 @@ def print_comments(comment_json, file_path):
         # child_comments = single_comment['child_comments']
 
         # 子评论 注意 也会分页，有child_comment_json
-        'https://www.zhihu.com/api/v4/comments/834740835/child_comments'
+        # 'https://www.zhihu.com/api/v4/comments/834740835/child_comments'
         if single_comment['child_comment_count'] != 0:
             child_comment_url = single_comment['url'] + '/child_comments'
             print_child_comments(child_comment_url, file_path)
@@ -135,5 +140,5 @@ if __name__ == '__main__':
     # url = 'https://www.zhihu.com/question/357824038/answer/997190122'
     # url = 'https://www.zhihu.com/api/v4/answers/997190122'
     # url = 'https://www.zhihu.com/api/v4/answers/997190122/root_comments?order=normal&limit=20&offset=20&status=open'
-
-    get_zhihu_comments()
+    answer_num = ''
+    get_zhihu_comments(answer_num)
