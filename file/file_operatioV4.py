@@ -414,6 +414,7 @@ def creat_new_file(file_path, cover_old='n'):
 
 
 if __name__ == "__main__":
-    creat_new_file(r'D:\test_dir\temp_generate\aa\a.sql','y')
+    # creat_new_file(r'D:\test_dir\temp_generate\aa\a.sql','y')
+
     pass
 

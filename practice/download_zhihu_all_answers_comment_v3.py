@@ -17,13 +17,14 @@ def get_zhihu_comments(*params):
     :return:
     """
     answer_num = params[0]
-    file_path = params[1]
+
     # comments_url = answer_url + '/root_comments?order=normal&limit=20&offset=0&status=open'
     # comments_url = 'https://www.zhihu.com/api/v4/answers/997190122/root_comments?order=normal&limit=20&offset=0&status=open'
     comments_url = 'https://www.zhihu.com/api/v4/answers/' + answer_num + '/root_comments?order=normal&limit=20&offset=0&status=open'
+    file_path = 'D:\\temp\\testdir\\content.txt'
     # 如果文件已经存在，先删除
-    if file_path is None:
-        file_path = 'D:\\temp\\testdir\\content.txt'
+    if len(params) > 1:
+        file_path = params[1]
         pass
 
 
@@ -36,15 +37,26 @@ def get_zhihu_comments(*params):
 
 def get_zhihu_comments_from_comments_url(comments_url, file_path):
     headers = {
-
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36"
     }
     result = requests.get(comments_url, headers=headers)
-    # print('json:', comment_json, '\n')
     comment_json = json.loads(result.content)
-    comment_num = comment_json['common_counts']  # 这个包括子评论，不能用于评论的分页
+    # print('json:', comment_json, '\n')
+    if 'error' in comment_json.keys():
+        # print('error')
+        return
+        pass
+    # comment_num = comment_json['common_counts']  # 这个包括子评论，不能用于评论的分页
+    # try:
+    #     # 有些回答没有评论，执行这一行就会报错
+    #     comment_num = comment_json['common_counts']  # 这个包括子评论，不能用于评论的分页
+    #     pass
+    # except Exception:
+    #     return
+    #     pass
+
     comment_paging_is_end = comment_json['paging']['is_end']  # 是不是最后一页
-    comment_paging_totals = comment_json['paging']['totals']
+    # comment_paging_totals = comment_json['paging']['totals']
     # print('comment_num:', comment_num)
     # page_num = 1
     # url_params = parse.parse_qs(parse.urlparse(comments_url).query)
@@ -121,7 +133,7 @@ def print_child_comments(child_comment_url, file_path):
     }
     result = requests.get(child_comment_url, headers=headers)
     child_comment_json = json.loads(result.content)
-    # print('child_comment_json:', child_comment_json)
+    print('child_comment_json:', child_comment_json)
     for single_child_comment in child_comment_json['data']:
         with open(file_path, 'a+', encoding='gb18030') as fp_content:
             child_comment_text_str = '\t' + 'reply: ' + single_child_comment['author']['member']['name'] + ': ' + \
@@ -140,5 +152,5 @@ if __name__ == '__main__':
     # url = 'https://www.zhihu.com/question/357824038/answer/997190122'
     # url = 'https://www.zhihu.com/api/v4/answers/997190122'
     # url = 'https://www.zhihu.com/api/v4/answers/997190122/root_comments?order=normal&limit=20&offset=20&status=open'
-    answer_num = ''
+    answer_num = '1042877033'
     get_zhihu_comments(answer_num)

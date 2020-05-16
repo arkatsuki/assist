@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 # from lxml import html
 import os
-from practice.download_zhihu_all_answers_html_content import dowmload_answers
+from practice.download_zhihu_all_answers_content_v3 import dowmload_answers
 # from practice.download_zhihu_all_answers_html_comment import get_zhihu_comments
 
 
