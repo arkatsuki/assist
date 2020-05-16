@@ -27,11 +27,11 @@ def get_all_answer_url(*params):
         pass
     # print('limit:', limit, 'offset:', offset)
     # 成功的一个question_num: 367881928
-    question_num = '308085320' # 舔狗到底有多么卑微
+    # question_num = '308085320' # 舔狗到底有多么卑微
     # question_num = '357824038' # 你喜欢的人和别人发生了关系你有什么感受
     # question_num = '307189774' # 发现自己舔的女神是别人的舔狗是种怎样的体验
-    # question_num = '326181194' # 当你知道自己被带绿帽子是什么感觉
-    # question_num = '512944141' # 男生得知自己被绿了是种怎样的体验
+    question_num = '326181194' # 当你知道自己被带绿帽子是什么感觉
+    # question_num = '31068506' # 男生得知自己被绿了是种怎样的体验
     # question_num = '301837738' # 女生得知自己被绿了是种怎样的体验
     url_get_answers = 'https://www.zhihu.com/api/v4/questions/' + question_num + '/answers?include=data%5B%2A%5D.is_normal' \
           '%2Cadmin_closed_comment%2Creward_info%2Cis_collapsed%2Cannotation_action%2Cannotation_detail' \
@@ -50,7 +50,7 @@ def get_all_answer_url(*params):
     # print('result.status_code:', result.status_code)
     # print('json:', comment_json, '\n')
     result_json = json.loads(result.content)
-    print('result_json:', result_json)
+    # print('result_json:', result_json)
     # if 'error' in result_json.keys():
     #     print('error')
     #     pass

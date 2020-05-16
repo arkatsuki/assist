@@ -133,7 +133,7 @@ def print_child_comments(child_comment_url, file_path):
     }
     result = requests.get(child_comment_url, headers=headers)
     child_comment_json = json.loads(result.content)
-    print('child_comment_json:', child_comment_json)
+    # print('child_comment_json:', child_comment_json)
     for single_child_comment in child_comment_json['data']:
         with open(file_path, 'a+', encoding='gb18030') as fp_content:
             child_comment_text_str = '\t' + 'reply: ' + single_child_comment['author']['member']['name'] + ': ' + \

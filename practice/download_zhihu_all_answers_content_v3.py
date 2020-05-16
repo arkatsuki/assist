@@ -18,14 +18,16 @@ def dowmload_answers(answer_url):
 
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36"
     }
+    print('answer_url', answer_url)
     result = requests.get(answer_url, headers=headers)
-    # print('html:', html, '\n')
     html = result.content
-    print('html:', html)
+    # print('html:', html, '\n')
     # html.replace('<br>', '\n').replace('<br/>', '\n')   # 会报错a bytes-like object is required, not 'str'
     # soup = BeautifulSoup(html, fromEncoding='utf-8')
-    soup = BeautifulSoup(html, fromEncoding='gb18030') # 取标签内的汉字时，避免乱码
+    soup = BeautifulSoup(html, 'html.parser', fromEncoding='gb18030') # 取标签内的汉字时，避免乱码
     # soup = BeautifulSoup(html, 'lxml')
+
+    # print('prettify', soup.prettify())
     i = 0
     # 从url中截取答案的编号
     begin = answer_url.rfind('/')
@@ -45,7 +47,6 @@ def dowmload_answers(answer_url):
         fp_content.write('\n\n\n' + answer_url)
         fp_content.write('\n\n\n')
 
-        # for box in soup.findAll('div', class_='RichContent RichContent--unescapable'):
         for box in soup.findAll('div', class_='RichContent RichContent--unescapable'):
             # print('box:', box, '\n')
 
@@ -116,7 +117,7 @@ def dowmload_answers(answer_url):
 
 if __name__ == '__main__':
     # url = 'https://www.zhihu.com/question/385655582/answer/1164227477'
-    answer_url = 'https://www.zhihu.com/question/319637812/answer/844124334'
+    answer_url = 'https://www.zhihu.com/question/28990759/answer/601343886'
     # url = 'https://www.zhihu.com/api/v4/answers/997190122/root_comments?order=normal&limit=20&offset=20&status=open'
     # url = 'https://www.zhihu.com/question/375265966/answer/1135813803'
     dowmload_answers(answer_url)

@@ -13,14 +13,14 @@ def dowmloadPic(html):
     :param html:
     :return:
     """
-    # print('html:', html, '\n')
+    print('html:', html, '\n')
 
     # html.replace('<br>', '\n').replace('<br/>', '\n')   # 会报错a bytes-like object is required, not 'str'
     # soup = BeautifulSoup(html, fromEncoding='utf-8')
-    soup = BeautifulSoup(html, fromEncoding='gb18030') # 取标签内的汉字时，避免乱码
+    soup = BeautifulSoup(html, 'html.parser', fromEncoding='gb18030') # 取标签内的汉字时，避免乱码
     # soup = BeautifulSoup(html, 'lxml')
+    print('prettify', soup.prettify())
     i = 0
-
     # 如果文件已经存在，先删除
     file_path = 'D:\\temp\\testdir\\content.txt'
     if os.path.exists(file_path):
@@ -73,7 +73,8 @@ def dowmloadPic(html):
 
 if __name__ == '__main__':
     # url = 'https://www.zhihu.com/question/385655582/answer/1164227477'
-    url = 'https://www.zhihu.com/question/319637812/answer/844124334'
+    # url = 'https://www.zhihu.com/question/319637812/answer/844124334'
+    url = 'https://www.zhihu.com/question/28990759/answer/601343886'
     # url = 'https://www.zhihu.com/api/v4/answers/997190122/root_comments?order=normal&limit=20&offset=20&status=open'
     # url = 'https://www.zhihu.com/question/375265966/answer/1135813803'
     headers = {
