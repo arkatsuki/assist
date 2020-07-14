@@ -59,28 +59,28 @@ def get_all_answer_url(*params):
     # print('url_get_answers:', url_get_answers)
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36"
-        ,'authority': 'www.zhihu.com',
-        'referer' : 'https://www.zhihu.com/question/300415423',
-        'cookie' : '_zap=37a92473-e671-4bf0-94ec-68ebacdcef12; '
-                   'd_c0="AECg1FwpXRCPTr593iMS_eqQZzKJYEWy9vI=|1573909874"; _xsrf=o8GnotMOZgGFJC2HVuekmVAWkS39Nh2s; '
-                   '_ga=GA1.2.1704039401.1583584893; tst=r; '
-                   'q_c1=c129a4aa8651406a8192191a16831f20|1587977475000|1587977475000; '
-                   '_gid=GA1.2.1679089183.1589164550; __utma=51854390.1704039401.1583584893.1589555489.1589695987.3; '
-                   '__utmz=51854390.1589695987.3.3.utmcsr=zhihu.com|utmccn=('
-                   'referral)|utmcmd=referral|utmcct=/question/300415423/answer/574881894; '
-                   '__utmv=51854390.100-1|2=registration_date=20130620=1^3=entry_date=20130620=1; '
-                   'capsion_ticket="2|1:0|10:1589717495|14:capsion_ticket|44'
-                   ':NGQ3YTFkMzhlN2QzNGU1MTg3YTQzNzY0M2QxOWJjYzA'
-                   '=|a1d57bb24bc48be7d3284e4657583ea9c48d970ec0ec33632bd7c8fba3994982"; '
-                   'z_c0="2|1:0|10:1589717503|4:z_c0|92'
-                   ':Mi4xWVEycEFBQUFBQUFBUUtEVVhDbGRFQ1lBQUFCZ0FsVk5fM2V1WHdEcXkzUDNBenlOYnBpb0NYWE5oSGQ2OGMwVm9B'
-                   '|c710098eaf5b712ac93d033833037b4d1ff69f705ca55e613ca2f71e45446389"; '
-                   'Hm_lvt_98beee57fd2ef70ccdd5ca52b9740c49=1589697063,1589717467,1589720846,1589755881; '
-                   '_gat_gtag_UA_149949619_1=1; SESSIONID=t0vU37BEQL5q7lbiOOdv0JdAqVSn5RTL2UjYzA64oPz; '
-                   'JOID=VFwUBk2ywOupXHM1b7Fy8z9NOX55xPWZ_29Gci7jjtvcaB9VA19-LfRedDRoXhLIKkJatDmsbxarYKz_tuAjPUE=; '
-                   'osd=W1gWCk69xOmlX3wxbb1x_DtPNX12wPeV_GBCcCLggd_eZBxaB11yLvtadjhrURbKJkFVsDugbBmvYqD8ueQhMUI=; '
-                   'Hm_lpvt_98beee57fd2ef70ccdd5ca52b9740c49=1589755905; '
-                   'KLBRSID=4efa8d1879cb42f8c5b48fe9f8d37c16|1589755924|1589755879 '
+        # ,'authority': 'www.zhihu.com',
+        # 'referer' : 'https://www.zhihu.com/question/300415423',
+        # 'cookie' : '_zap=37a92473-e671-4bf0-94ec-68ebacdcef12; '
+        #            'd_c0="AECg1FwpXRCPTr593iMS_eqQZzKJYEWy9vI=|1573909874"; _xsrf=o8GnotMOZgGFJC2HVuekmVAWkS39Nh2s; '
+        #            '_ga=GA1.2.1704039401.1583584893; tst=r; '
+        #            'q_c1=c129a4aa8651406a8192191a16831f20|1587977475000|1587977475000; '
+        #            '_gid=GA1.2.1679089183.1589164550; __utma=51854390.1704039401.1583584893.1589555489.1589695987.3; '
+        #            '__utmz=51854390.1589695987.3.3.utmcsr=zhihu.com|utmccn=('
+        #            'referral)|utmcmd=referral|utmcct=/question/300415423/answer/574881894; '
+        #            '__utmv=51854390.100-1|2=registration_date=20130620=1^3=entry_date=20130620=1; '
+        #            'capsion_ticket="2|1:0|10:1589717495|14:capsion_ticket|44'
+        #            ':NGQ3YTFkMzhlN2QzNGU1MTg3YTQzNzY0M2QxOWJjYzA'
+        #            '=|a1d57bb24bc48be7d3284e4657583ea9c48d970ec0ec33632bd7c8fba3994982"; '
+        #            'z_c0="2|1:0|10:1589717503|4:z_c0|92'
+        #            ':Mi4xWVEycEFBQUFBQUFBUUtEVVhDbGRFQ1lBQUFCZ0FsVk5fM2V1WHdEcXkzUDNBenlOYnBpb0NYWE5oSGQ2OGMwVm9B'
+        #            '|c710098eaf5b712ac93d033833037b4d1ff69f705ca55e613ca2f71e45446389"; '
+        #            'Hm_lvt_98beee57fd2ef70ccdd5ca52b9740c49=1589697063,1589717467,1589720846,1589755881; '
+        #            '_gat_gtag_UA_149949619_1=1; SESSIONID=t0vU37BEQL5q7lbiOOdv0JdAqVSn5RTL2UjYzA64oPz; '
+        #            'JOID=VFwUBk2ywOupXHM1b7Fy8z9NOX55xPWZ_29Gci7jjtvcaB9VA19-LfRedDRoXhLIKkJatDmsbxarYKz_tuAjPUE=; '
+        #            'osd=W1gWCk69xOmlX3wxbb1x_DtPNX12wPeV_GBCcCLggd_eZBxaB11yLvtadjhrURbKJkFVsDugbBmvYqD8ueQhMUI=; '
+        #            'Hm_lpvt_98beee57fd2ef70ccdd5ca52b9740c49=1589755905; '
+        #            'KLBRSID=4efa8d1879cb42f8c5b48fe9f8d37c16|1589755924|1589755879 '
     }
     result = requests.get(url_get_answers, headers=headers)
     # print('result.status_code:', result.status_code)

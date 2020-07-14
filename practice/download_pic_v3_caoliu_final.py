@@ -29,6 +29,9 @@ def dowmloadPic(html):
         for a in box.findAll('img'):
             # src = a.get('src')
             src = a.get('ess-data')
+            if src is None:
+                src = a.get('data-src')
+                pass
             if src is not None:
                 print('src:', src, '\n')
                 i += 1
@@ -47,7 +50,8 @@ def dowmloadPic(html):
                     continue
 
                 # '{0:0>4}'.format(1) 第二个0表示前面补0, 4表示一共4位，'>'表示右对齐，'<'表示左对齐。
-                dir = 'D:\\temp\\testdir\\' + '20200427_' + '{0:0>4}'.format(str(i)) + '.jpg'
+                dir = 'D:\\temp\\testdir\\' + '20200522_' + '{0:0>4}'.format(str(i)) + '.' + src[src.rfind(
+                    '.') + 1:]
                 print("dir:", dir)
                 fp = open(dir, 'wb')
                 fp.write(pic.content)
@@ -59,6 +63,7 @@ def dowmloadPic(html):
 
 
 if __name__ == '__main__':
-    url = 'https://cl.n2sa.xyz/htm_data/2002/7/3829905.html'
+    # url = 'https://cl.n2sa.xyz/htm_data/2002/7/3829905.html'
+    url = 'https://c1.a9ae.icu/htm_data/2002/7/3818711.html'
     result = requests.get(url)
     dowmloadPic(result.content)

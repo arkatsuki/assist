@@ -132,7 +132,7 @@ def print_child_comments(child_comment_url, file_path):
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36"
     }
     result = requests.get(child_comment_url, headers=headers)
-    print('result.content:', result.content)
+    # print('result.content:', result.content)
     child_comment_json = json.loads(result.content)
     # print('child_comment_json:', child_comment_json)
     for single_child_comment in child_comment_json['data']:
@@ -153,5 +153,5 @@ if __name__ == '__main__':
     # url = 'https://www.zhihu.com/question/357824038/answer/997190122'
     # url = 'https://www.zhihu.com/api/v4/answers/997190122'
     # url = 'https://www.zhihu.com/api/v4/answers/997190122/root_comments?order=normal&limit=20&offset=20&status=open'
-    answer_num = '1042877033'
+    answer_num = '1203841586'
     get_zhihu_comments(answer_num)
