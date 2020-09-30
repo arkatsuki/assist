@@ -29,7 +29,7 @@ def get_all_answer_url(*params):
     # print('limit:', limit, 'offset:', offset)
     # 成功的一个question_num: 367881928
     # question_num = '308085320' # 舔狗到底有多么卑微
-    question_num = '300415423' # 舔狗到底有多卑微
+    question_num = '265474115' # 舔狗到底有多卑微
     # question_num = '289633855' # 处女情结怎么克服啊 我男友特别喜欢我 但是他是真的有处女情节啊 怎么破
     # question_num = '309196396' # 有没有男人真的没有处女情结
     # question_num = '312334173' # 有你是否有处女 男情结 如果有 为什么
@@ -90,6 +90,8 @@ def get_all_answer_url(*params):
     # if 'error' in result_json.keys():
     #     print('error')
     #     pass
+    # if 'paging' not in result_json:
+    #     return
     if result_json['paging']['is_end']:
         return
     for single_data in result_json['data']:
